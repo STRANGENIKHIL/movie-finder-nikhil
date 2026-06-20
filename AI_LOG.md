@@ -1,27 +1,69 @@
-# AI_LOG.md
+# AI Log
 
-## Tools Used
-- **Antigravity IDE (AI Coding Assistant)** — Used throughout the entire project for scaffolding, component generation, and debugging.
+## Tool Used
+
+### Antigravity IDE (AI Coding Assistant)
+
+I used Antigravity throughout the project to speed up development, generate boilerplate code, and help debug issues. While AI handled much of the initial setup, I manually tested features, fixed bugs, and refined the final implementation.
 
 ---
 
 ## Best Prompts
 
-**Prompt 1:** *"Build a Movie Discovery App in Next.js using TMDB API with browse, search, favorites with localStorage, loading/error/empty states, and strict pagination of exactly 12 results per page using Next/Previous buttons only."*
-> **Why it worked:** Provided the full spec upfront including all constraints (12 per page, no infinite scroll). The AI immediately produced a well-structured plan with the correct architecture.
+### 1. Project Setup
 
-**Prompt 2:** *"Create a React Context for favorites that persists to localStorage and can be shared across MovieCard, detail page, and favorites page without prop drilling."*
-> **Why it worked:** Specifying the exact problem (prop drilling) and naming the components that need access forced a focused, reusable solution instead of a local hook.
+> Build a Movie Discovery App in Next.js using the TMDB API with movie browsing, search, favorites using localStorage, loading/error states, and exactly 12 results per page using Next/Previous buttons.
 
-**Prompt 3:** *"Use CSS only (no Tailwind) with a cinematic dark theme: near-black background, gold accent #f5c518, purple accent #8b5cf6, Bebas Neue for headings, glassmorphism cards, shimmer skeleton loaders."*
-> **Why it worked:** Listing specific hex values and named design patterns (glassmorphism, shimmer) left no room for generic output and produced a visually polished result on the first attempt.
+**Why it was useful**
+
+This prompt generated the basic project structure, API integration, and pagination workflow. It provided a solid starting point and reduced the amount of setup work required.
+
+### 2. Favorites State Management
+
+> Create a React Context for managing favorite movies that persists to localStorage and can be accessed across multiple pages without prop drilling.
+
+**Why it was useful**
+
+This helped organize the favorites feature and made it easier to share state between components without passing props through several layers.
+
+### 3. UI Design
+
+> Create a dark movie-themed UI using CSS with glassmorphism cards, skeleton loaders, and modern hover effects.
+
+**Why it was useful**
+
+The generated design gave me a strong visual foundation that I later customized by adjusting colors, spacing, and responsiveness.
 
 ---
 
-## What I Fixed Manually
+## Manual Fixes
 
-**Issue — Pagination page count mismatch:**
-The AI initially set `totalPages` directly from TMDB's `total_pages` (which returns up to 500), but it didn't cap it when combined with the 12-results-per-page slice. This caused the page counter to show 500 pages when the actual usable content ran out much earlier. I manually added `Math.min(data.total_pages, 500)` and verified the UX made sense across several searches with varying result counts.
+### Pagination Logic
 
-**Issue — FavoriteButton re-render loop:**
-The AI initially passed `Math.random()` as a button ID inside FavoriteButton, which caused a new ID on every render and triggered unnecessary re-renders. I changed it to use `movieId` as a prop so the ID is stable.
+The initial implementation required adjustments to correctly support displaying exactly 12 movies per page.
+
+After testing multiple searches and navigation scenarios, I refined the pagination logic and verified that page transitions behaved consistently.
+
+### Favorites Optimization
+
+While testing the favorites feature, I noticed unnecessary re-renders caused by unstable identifiers.
+
+I replaced the generated values with stable movie IDs, which improved performance and ensured predictable behavior.
+
+### UI Refinements
+
+Several design improvements were made manually after the initial AI-generated implementation:
+
+* Improved spacing and alignment
+* Adjusted card sizing and layouts
+* Enhanced responsiveness
+* Refined typography and hover effects
+* Improved overall user experience
+
+---
+
+## Reflection
+
+Antigravity significantly reduced development time by handling repetitive setup tasks and generating initial implementations.
+
+However, manual testing, debugging, optimization, and UI refinements were still necessary to ensure the final application met the project requirements and delivered a polished user experience.
