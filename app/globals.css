@@ -1,0 +1,973 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap');
+
+/* ========================================================
+   MINTLIFY DESIGN SYSTEM — Dark Mode Adaptation
+   Reference: DESIGN.md (getdesign@latest add mintlify)
+   ======================================================== */
+
+:root {
+  /* --- Mintlify Color Tokens (dark canvas variant) --- */
+  --canvas-dark:      #0a0a0a;
+  --surface-dark:     #111111;
+  --surface-card:     #161616;
+  --surface-raised:   #1c1c1c;
+  --surface-code:     #1c1c1e;
+
+  --hairline-dark:    #1f1f1f;
+  --hairline-mid:     #2a2a2a;
+
+  /* Brand */
+  --brand-green:      #00d4a4;
+  --brand-green-deep: #00b48a;
+  --brand-green-soft: rgba(0, 212, 164, 0.10);
+  --brand-green-glow: rgba(0, 212, 164, 0.18);
+
+  /* Text on dark */
+  --on-dark:          #ffffff;
+  --on-dark-muted:    #b3b3b3;
+  --stone:            #888888;
+  --steel:            #5a5a5c;
+
+  /* Semantic */
+  --brand-error:      #d45656;
+  --brand-warn:       #c37d0d;
+
+  /* --- Mintlify Radius Scale (exact) --- */
+  --rounded-xs:   4px;
+  --rounded-sm:   6px;
+  --rounded-md:   8px;
+  --rounded-lg:   12px;
+  --rounded-xl:   16px;
+  --rounded-xxl:  24px;
+  --rounded-full: 9999px;
+
+  /* --- Mintlify Spacing Scale (exact) --- */
+  --space-xxs:        4px;
+  --space-xs:         8px;
+  --space-sm:         12px;
+  --space-md:         16px;
+  --space-lg:         20px;
+  --space-xl:         24px;
+  --space-xxl:        32px;
+  --space-xxxl:       40px;
+  --space-section-sm: 48px;
+  --space-section:    64px;
+  --space-section-lg: 96px;
+  --space-hero:       120px;
+
+  /* Transitions */
+  --transition:      all 0.18s ease;
+  --transition-md:   all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========================================================
+   RESET & BASE
+   ======================================================== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: transparent;
+  color: var(--on-dark);
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========================================================
+   CINEMATIC BACKGROUND
+   Fixed behind everything, z-index: -1
+   ======================================================== */
+.cbg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: #06060c;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* --- Animated gradient orbs (projector light) --- */
+.cbg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(110px);
+  will-change: transform;
+}
+
+/* Purple — top-left, cinema projector purple */
+.cbg-orb-purple {
+  width: 55vw;
+  height: 55vh;
+  top: -18%;
+  left: -12%;
+  background: radial-gradient(circle, rgba(109, 40, 217, 0.28) 0%, transparent 70%);
+  animation: orbDrift1 32s ease-in-out infinite;
+}
+
+/* Teal / Mint — bottom-right, brand color */
+.cbg-orb-teal {
+  width: 45vw;
+  height: 55vh;
+  bottom: -12%;
+  right: -8%;
+  background: radial-gradient(circle, rgba(0, 180, 138, 0.22) 0%, transparent 70%);
+  animation: orbDrift2 26s ease-in-out infinite;
+}
+
+/* Deep blue — center, depth layer */
+.cbg-orb-blue {
+  width: 40vw;
+  height: 45vh;
+  top: 40%;
+  left: 35%;
+  background: radial-gradient(circle, rgba(29, 78, 216, 0.18) 0%, transparent 70%);
+  animation: orbDrift3 38s ease-in-out infinite;
+}
+
+@keyframes orbDrift1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  30%      { transform: translate(7vw, 5vh) scale(1.08); }
+  65%      { transform: translate(-4vw, 9vh) scale(0.94); }
+}
+@keyframes orbDrift2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  35%      { transform: translate(-6vw, -5vh) scale(1.06); }
+  70%      { transform: translate(5vw, -8vh) scale(1.1); }
+}
+@keyframes orbDrift3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(-9vw, 7vh) scale(1.14); }
+}
+
+/* --- Film strip edges --- */
+.cbg-strip {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+.cbg-strip-l {
+  left: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
+}
+.cbg-strip-r {
+  right: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.04);
+}
+.cbg-hole {
+  width: 13px;
+  height: 9px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.055);
+  flex-shrink: 0;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
+}
+
+/* --- Film grain noise --- */
+.cbg-grain {
+  position: absolute;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  opacity: 0.038;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.80' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grainShift 0.35s steps(1) infinite;
+}
+@keyframes grainShift {
+  0%   { transform: translate(0, 0); }
+  20%  { transform: translate(-4%, 3%); }
+  40%  { transform: translate(4%, -4%); }
+  60%  { transform: translate(-3%, -3%); }
+  80%  { transform: translate(3%, 4%); }
+  100% { transform: translate(-1%, -2%); }
+}
+
+/* --- Edge vignette --- */
+.cbg-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 45%, transparent 45%, rgba(0, 0, 0, 0.72) 100%);
+}
+
+/* Hide film strips on very small screens */
+@media (max-width: 680px) {
+  .cbg-strip { display: none; }
+}
+
+
+a    { color: inherit; text-decoration: none; }
+img  { max-width: 100%; display: block; }
+button { cursor: pointer; font-family: inherit; }
+
+/* Custom scrollbar */
+::-webkit-scrollbar       { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--surface-dark); }
+::-webkit-scrollbar-thumb { background: var(--hairline-mid); border-radius: var(--rounded-full); }
+::-webkit-scrollbar-thumb:hover { background: var(--brand-green); }
+
+/* ========================================================
+   NAVBAR
+   Mintlify top-nav: sticky, clean, hairline bottom border
+   ======================================================== */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 64px;
+  background: rgba(10, 10, 10, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--hairline-dark);
+}
+.navbar-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--space-xxl);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--on-dark);
+  transition: var(--transition);
+}
+.navbar-logo:hover { opacity: 0.75; }
+.navbar-logo-icon { font-size: 18px; }
+
+.navbar-links { display: flex; align-items: center; gap: var(--space-xs); }
+
+/* Mintlify ghost button style for nav links */
+.navbar-link {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--stone);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--rounded-md);
+  border: 1px solid transparent;
+  transition: var(--transition);
+}
+.navbar-link:hover {
+  color: var(--on-dark);
+  background: var(--surface-raised);
+  border-color: var(--hairline-dark);
+}
+/* Mintlify pill-tab-active: primary bg on dark */
+.navbar-link-active {
+  color: var(--canvas-dark) !important;
+  background: var(--brand-green) !important;
+  border-color: var(--brand-green) !important;
+  border-radius: var(--rounded-full) !important;
+}
+
+/* ========================================================
+   PAGE LAYOUT
+   Mintlify 1280px container with 32px gutters
+   ======================================================== */
+.page-wrapper {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--space-xxl) var(--space-section-lg);
+}
+
+/* ========================================================
+   HERO
+   Mintlify hero-display: Inter 600, -2px letter-spacing
+   ======================================================== */
+.hero {
+  text-align: center;
+  padding: var(--space-section-lg) var(--space-xxl) var(--space-section);
+}
+
+/* typography.hero-display: 72px / 600 / lh 1.05 / ls -2px */
+.hero-title {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(2.8rem, 7vw, 4.5rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -2px;
+  color: var(--on-dark);
+  margin-bottom: var(--space-md);
+}
+
+/* brand-green accent word */
+.gold { color: var(--brand-green); }
+
+/* typography.subtitle: 18px / 400 / lh 1.5 */
+.hero-subtitle {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--on-dark-muted);
+  margin-bottom: var(--space-xxxl);
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ========================================================
+   SEARCH BAR
+   Mintlify text-input: canvas bg, hairline border, 40px h
+   Focus: 2px solid brand-green
+   ======================================================== */
+.search-wrapper {
+  max-width: 560px;
+  margin: 0 auto;
+  position: relative;
+}
+.search-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 var(--space-xxxl) 0 2.8rem;
+  background: var(--surface-card);
+  border: 1px solid var(--hairline-dark);
+  border-radius: var(--rounded-full);
+  color: var(--on-dark);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  outline: none;
+  transition: var(--transition);
+}
+.search-input::placeholder { color: var(--stone); }
+.search-input:focus {
+  border: 2px solid var(--brand-green);
+  background: var(--surface-raised);
+  box-shadow: 0 0 0 3px var(--brand-green-soft);
+}
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  pointer-events: none;
+  color: var(--stone);
+}
+.search-clear {
+  position: absolute;
+  right: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--surface-raised);
+  border: 1px solid var(--hairline-dark);
+  border-radius: var(--rounded-full);
+  color: var(--stone);
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  transition: var(--transition);
+}
+.search-clear:hover { color: var(--on-dark); border-color: var(--hairline-mid); }
+
+/* ========================================================
+   GENRE FILTER BAR
+   Mintlify pill-tab + pill-tab-active style
+   Horizontal scroll, sticky below hero
+   ======================================================== */
+.genre-filter-wrapper {
+  position: sticky;
+  top: 64px; /* below navbar */
+  z-index: 50;
+  background: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--hairline-dark);
+  padding: var(--space-sm) 0;
+}
+.genre-filter-scroll {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--space-xxl);
+  display: flex;
+  gap: var(--space-xs);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.genre-filter-scroll::-webkit-scrollbar { display: none; }
+
+/* Mintlify pill-tab inactive */
+.genre-pill {
+  flex-shrink: 0;
+  padding: 7px var(--space-md);
+  background: var(--surface-card);
+  border: 1px solid var(--hairline-dark);
+  border-radius: var(--rounded-full);
+  color: var(--stone);
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+.genre-pill:hover {
+  color: var(--on-dark);
+  border-color: var(--hairline-mid);
+  background: var(--surface-raised);
+}
+/* Mintlify pill-tab-active: brand-green bg, dark text */
+.genre-pill-active {
+  background: var(--brand-green) !important;
+  border-color: var(--brand-green) !important;
+  color: var(--canvas-dark) !important;
+  font-weight: 600 !important;
+}
+
+/* ========================================================
+   SECTION HEADER
+   ======================================================== */
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xl);
+  padding-top: var(--space-sm);
+}
+
+/* typography.heading-3: 28px / 600 / lh 1.25 */
+.section-title {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.5px;
+  color: var(--on-dark);
+}
+
+/* Mintlify badge-type style for count chip */
+.section-count {
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--stone);
+  background: var(--surface-raised);
+  border: 1px solid var(--hairline-dark);
+  padding: 2px 10px;
+  border-radius: var(--rounded-full);
+}
+
+/* ========================================================
+   MOVIE GRID
+   ======================================================== */
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: var(--space-md);
+}
+
+/* ========================================================
+   MOVIE CARD
+   Mintlify card-base: rounded-lg (12px), hairline border
+   Flat by default — elevation only on hover
+   ======================================================== */
+.movie-card {
+  position: relative;
+  border-radius: var(--rounded-lg);
+  overflow: hidden;
+  background: var(--surface-card);
+  border: 1px solid var(--hairline-dark);
+  transition: var(--transition-md);
+  display: block;
+}
+.movie-card:hover {
+  border-color: var(--brand-green);
+  box-shadow: 0 0 0 1px var(--brand-green-soft),
+              0 8px 24px rgba(0, 212, 164, 0.08),
+              0 16px 48px rgba(0, 0, 0, 0.4);
+  transform: translateY(-4px);
+}
+
+.movie-card-poster {
+  position: relative;
+  aspect-ratio: 2/3;
+  overflow: hidden;
+  background: var(--surface-dark);
+}
+.movie-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.movie-card:hover .movie-card-img { transform: scale(1.05); }
+
+/* Overlay: fade in on hover — Mintlify flat style with brand-green CTA */
+.movie-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 25%, rgba(10, 10, 10, 0.88) 100%);
+  opacity: 0;
+  transition: var(--transition-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.movie-card:hover .movie-card-overlay { opacity: 1; }
+
+/* Mintlify button-accent-green pill */
+.view-btn {
+  background: var(--brand-green);
+  color: var(--canvas-dark);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: var(--rounded-full);
+  letter-spacing: 0.2px;
+  transform: translateY(10px);
+  opacity: 0;
+  transition: var(--transition-md);
+}
+.movie-card:hover .view-btn { transform: translateY(0); opacity: 1; }
+
+/* Mintlify badge-type for rating — Geist Mono */
+.movie-card-rating {
+  position: absolute;
+  top: var(--space-xs);
+  left: var(--space-xs);
+  background: rgba(10, 10, 10, 0.82);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--hairline-dark);
+  border-radius: var(--rounded-sm);
+  padding: 3px 8px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--brand-green);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.movie-card-fav { position: absolute; top: var(--space-xs); right: var(--space-xs); }
+
+/* Mintlify card info: body-sm typography */
+.movie-card-info { padding: var(--space-sm) var(--space-md) var(--space-md); }
+.movie-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.2px;
+  color: var(--on-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+
+/* Geist Mono for year metadata */
+.movie-card-year {
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--stone);
+}
+
+.no-poster {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  font-size: 2.5rem;
+  background: var(--surface-dark);
+}
+.no-poster span {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  color: var(--stone);
+}
+
+/* ========================================================
+   FAVORITE BUTTON
+   Mintlify button-icon-circular: 32px, hairline border
+   ======================================================== */
+.fav-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 10, 10, 0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--hairline-mid);
+  border-radius: var(--rounded-full);
+  font-size: 14px;
+  transition: var(--transition);
+}
+.fav-btn:hover { transform: scale(1.12); border-color: rgba(212, 86, 86, 0.5); }
+.fav-btn-active {
+  border-color: rgba(212, 86, 86, 0.6) !important;
+  background: rgba(212, 86, 86, 0.12) !important;
+}
+@keyframes heartPop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.45); }
+  100% { transform: scale(1); }
+}
+.fav-btn-active .fav-icon { display: inline-block; animation: heartPop 0.28s ease; }
+
+/* ========================================================
+   SKELETON LOADERS
+   ======================================================== */
+.skeleton-card {
+  border-radius: var(--rounded-lg);
+  overflow: hidden;
+  background: var(--surface-card);
+  border: 1px solid var(--hairline-dark);
+}
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.skeleton-poster {
+  aspect-ratio: 2/3;
+  background: linear-gradient(90deg, #111 25%, #1c1c1c 50%, #111 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+.skeleton-info { padding: var(--space-sm) var(--space-md); }
+.skeleton-line {
+  height: 12px;
+  border-radius: var(--rounded-xs);
+  background: linear-gradient(90deg, #111 25%, #1c1c1c 50%, #111 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  margin-bottom: var(--space-xs);
+}
+.skeleton-line-short { width: 45%; }
+
+/* ========================================================
+   PAGINATION
+   Mintlify pill-tab button style
+   ======================================================== */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  padding: var(--space-section) 0 var(--space-md);
+}
+
+/* Mintlify button-secondary on dark */
+.pagination-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 10px var(--space-xl);
+  background: transparent;
+  border: 1px solid var(--hairline-mid);
+  border-radius: var(--rounded-full);
+  color: var(--on-dark-muted);
+  font-size: 14px;
+  font-weight: 500;
+  transition: var(--transition);
+}
+.pagination-btn:hover:not(:disabled) {
+  background: var(--brand-green-soft);
+  border-color: var(--brand-green);
+  color: var(--brand-green);
+}
+.pagination-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+/* Mintlify badge-type chip for page info — Geist Mono */
+.pagination-info {
+  font-family: 'Geist Mono', monospace;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--stone);
+  padding: 10px var(--space-xl);
+  background: var(--surface-card);
+  border: 1px solid var(--hairline-dark);
+  border-radius: var(--rounded-full);
+  min-width: 150px;
+  text-align: center;
+}
+.pagination-info span { color: var(--brand-green); font-weight: 500; }
+
+/* ========================================================
+   ERROR / EMPTY STATE
+   ======================================================== */
+.error-state { text-align: center; padding: var(--space-hero) var(--space-xxl); }
+.error-icon  { font-size: 3.5rem; margin-bottom: var(--space-md); }
+
+/* typography.heading-2 */
+.error-title {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  color: var(--on-dark);
+  margin-bottom: var(--space-sm);
+}
+
+/* typography.body-md */
+.error-msg {
+  font-size: 16px;
+  color: var(--on-dark-muted);
+  margin-bottom: var(--space-xxl);
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+}
+
+/* Mintlify button-accent-green */
+.retry-btn {
+  padding: 10px var(--space-xl);
+  background: var(--brand-green-soft);
+  border: 1px solid var(--brand-green);
+  border-radius: var(--rounded-full);
+  color: var(--brand-green);
+  font-size: 14px;
+  font-weight: 500;
+  transition: var(--transition);
+}
+.retry-btn:hover { background: var(--brand-green); color: var(--canvas-dark); }
+
+/* ========================================================
+   FOOTER
+   Mintlify footer-region style
+   ======================================================== */
+.footer {
+  border-top: 1px solid var(--hairline-dark);
+  padding: var(--space-xl) var(--space-xxl);
+  text-align: center;
+  background: var(--surface-dark);
+}
+.footer-inner { max-width: 1280px; margin: 0 auto; }
+
+/* typography.micro — footer microcopy */
+.footer-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--stone);
+  letter-spacing: 0.1px;
+}
+.footer-text span { color: var(--brand-green); }
+
+/* ========================================================
+   MOVIE DETAIL PAGE
+   ======================================================== */
+.detail-page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--space-xxl) var(--space-xxl) var(--space-section-lg);
+}
+
+/* Mintlify button-ghost for back link */
+.detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-xxl);
+  color: var(--stone);
+  font-size: 14px;
+  font-weight: 500;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--rounded-md);
+  border: 1px solid var(--hairline-dark);
+  background: var(--surface-card);
+  transition: var(--transition);
+}
+.detail-back:hover { color: var(--brand-green); border-color: var(--brand-green); }
+
+.detail-hero { display: grid; grid-template-columns: 280px 1fr; gap: var(--space-section); align-items: start; }
+
+/* Mintlify card-base for poster */
+.detail-poster {
+  border-radius: var(--rounded-lg);
+  overflow: hidden;
+  border: 1px solid var(--hairline-dark);
+  box-shadow: 0 24px 48px -8px rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
+}
+.detail-poster img { width: 100%; }
+.detail-poster-placeholder {
+  aspect-ratio: 2/3;
+  background: var(--surface-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+}
+
+/* Genre badges — Mintlify badge-tag style */
+.detail-genres { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin-bottom: var(--space-md); }
+.genre-tag {
+  padding: 3px 10px;
+  border-radius: var(--rounded-sm);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  background: var(--brand-green-soft);
+  border: 1px solid rgba(0, 212, 164, 0.25);
+  color: var(--brand-green);
+}
+
+/* typography.heading-1: 48px / 600 / -1px */
+.detail-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 600;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  color: var(--on-dark);
+  margin-bottom: var(--space-md);
+}
+
+.detail-meta { display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-xl); flex-wrap: wrap; }
+
+/* Geist Mono for rating/year/runtime */
+.detail-rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--brand-green);
+}
+.detail-year, .detail-runtime {
+  font-family: 'Geist Mono', monospace;
+  font-size: 13px;
+  color: var(--stone);
+}
+.detail-sep { color: var(--hairline-mid); }
+
+/* typography.body-md */
+.detail-overview {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--on-dark-muted);
+  margin-bottom: var(--space-xxl);
+  max-width: 640px;
+}
+
+/* Mintlify button-accent-green pill for fav */
+.detail-fav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 10px var(--space-xl);
+  border-radius: var(--rounded-full);
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid rgba(212, 86, 86, 0.35);
+  background: rgba(212, 86, 86, 0.08);
+  color: #fb7185;
+  transition: var(--transition);
+}
+.detail-fav-btn:hover { background: rgba(212, 86, 86, 0.18); border-color: rgba(212, 86, 86, 0.6); }
+.detail-fav-btn-active { background: rgba(212, 86, 86, 0.18) !important; }
+
+/* Cast section */
+.detail-cast { margin-top: var(--space-section); }
+
+/* typography.heading-4 */
+.detail-cast-title {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  margin-bottom: var(--space-xl);
+  color: var(--on-dark);
+}
+
+.cast-grid { display: flex; gap: var(--space-md); overflow-x: auto; padding-bottom: var(--space-sm); }
+.cast-grid::-webkit-scrollbar { height: 3px; }
+.cast-card { flex-shrink: 0; width: 88px; text-align: center; }
+.cast-photo {
+  width: 68px;
+  height: 68px;
+  border-radius: var(--rounded-full);
+  object-fit: cover;
+  border: 1px solid var(--hairline-dark);
+  margin: 0 auto var(--space-xs);
+  transition: var(--transition);
+}
+.cast-photo:hover { border-color: var(--brand-green); }
+.cast-photo-placeholder {
+  width: 68px;
+  height: 68px;
+  border-radius: var(--rounded-full);
+  background: var(--surface-dark);
+  border: 1px solid var(--hairline-dark);
+  margin: 0 auto var(--space-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+/* typography.caption / micro */
+.cast-name { font-size: 12px; font-weight: 600; color: var(--on-dark); line-height: 1.3; }
+.cast-char { font-family: 'Geist Mono', monospace; font-size: 11px; color: var(--stone); margin-top: 2px; }
+
+/* ========================================================
+   FAVORITES PAGE
+   ======================================================== */
+.favorites-header { padding: var(--space-section) 0 var(--space-xxl); }
+
+/* typography.display-lg */
+.fav-page-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 600;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+  margin-bottom: var(--space-xs);
+}
+.fav-page-sub { font-size: 16px; color: var(--on-dark-muted); }
+
+/* ========================================================
+   LOADING SPINNER
+   ======================================================== */
+.loading-full { display: flex; align-items: center; justify-content: center; padding: var(--space-hero); }
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--hairline-dark);
+  border-top-color: var(--brand-green);
+  border-radius: var(--rounded-full);
+  animation: spin 0.65s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ========================================================
+   RESPONSIVE
+   Mintlify 1280px container drops to mobile gutters
+   ======================================================== */
+@media (max-width: 900px) {
+  .detail-hero { grid-template-columns: 220px 1fr; gap: var(--space-xxl); }
+}
+@media (max-width: 680px) {
+  .navbar-inner    { padding: 0 var(--space-md); }
+  .page-wrapper    { padding: 0 var(--space-md) var(--space-section); }
+  .hero            { padding: var(--space-section) var(--space-md) var(--space-xxl); }
+  .hero-title      { letter-spacing: -1px; }
+  .movie-grid      { grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: var(--space-sm); }
+  .detail-page     { padding: var(--space-md); }
+  .detail-hero     { grid-template-columns: 1fr; }
+  .detail-poster   { max-width: 240px; margin: 0 auto; }
+  .pagination      { gap: var(--space-xs); }
+  .pagination-btn  { padding: 9px var(--space-md); }
+  .pagination-info { min-width: 120px; }
+}
